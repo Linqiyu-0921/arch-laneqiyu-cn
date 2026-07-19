@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>建筑与营造 · 图像档案</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f4f4f2;
+            --surface: #ffffff;
+            --ink: #1c1c1c;
+            --ink-light: #6b6b6b;
+            --ink-muted: #9a9a98;
+            --accent: #8b5e3c;
+            --accent-light: #a67c52;
+            --border: #e0e0de;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --radius: 2px;
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+            --font-ui: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-ui);
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        img { display: block; max-width: 100%; }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(244,244,242,0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--ink);
+        }
+
+        .brand span {
+            color: var(--accent);
+        }
+
+        .channels {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .channel {
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--ink-light);
+            border-radius: 100px;
+            cursor: pointer;
+            transition: color 0.2s var(--ease), background 0.2s var(--ease);
+            user-select: none;
+        }
+
+        .channel:hover { color: var(--ink); }
+
+        .channel.active {
+            background: var(--ink);
+            color: var(--surface);
+        }
+
+        .count {
+            font-size: 0.75rem;
+            color: var(--ink-muted);
+            margin-left: 3px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .channel.active .count { color: var(--ink-muted); }
+
+        /* Hero / intro bar */
+        .intro-bar {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 32px 20px 24px;
+        }
+
+        .intro-bar h1 {
+            font-family: var(--font-display);
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            margin-bottom: 8px;
+        }
+
+        .intro-bar p {
+            font-size: 0.95rem;
+            color: var(--ink-light);
+            max-width: 640px;
+            line-height: 1.7;
+        }
+
+        /* Masonry grid */
+        .gallery-wrap {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+
+        .masonry {
+            columns: 5 220px;
+            column-gap: 14px;
+        }
+
+        .item {
+            break-inside: avoid;
+            margin-bottom: 14px;
+            cursor: zoom-in;
+            position: relative;
+            background: var(--surface);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+        }
+
+        .item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .item img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            background: #e8e8e6;
+        }
+
+        .item-meta {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 14px 12px 10px;
+            background: linear-gradient(0deg, rgba(28,28,28,0.75) 0%, rgba(28,28,28,0) 100%);
+            opacity: 0;
+            transition: opacity 0.2s var(--ease);
+            pointer-events: none;
+        }
+
+        .item:hover .item-meta { opacity: 1; }
+
+        .item-title {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.92);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .item-channel {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.65);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Empty state */
+        .empty {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--ink-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Detail overlay */
+        .detail {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(244,244,242,0.98);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s var(--ease);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .detail-toolbar {
+            flex-shrink: 0;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .detail-info {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .detail-title {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 420px;
+        }
+
+        .detail-channel {
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink-light);
+            transition: background 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .icon-btn:hover {
+            background: var(--border);
+            color: var(--ink);
+        }
+
+        .detail-stage {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 40px;
+            position: relative;
+        }
+
+        .detail-main {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--radius);
+        }
+
+        .detail-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--ink-light);
+            transition: all 0.2s var(--ease);
+        }
+
+        .detail-nav:hover {
+            background: var(--ink);
+            color: var(--surface);
+            border-color: var(--ink);
+        }
+
+        .detail-prev { left: 16px; }
+        .detail-next { right: 16px; }
+
+        /* Filmstrip */
+        .filmstrip-wrap {
+            flex-shrink: 0;
+            height: 116px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .filmstrip {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex: 1;
+            padding: 4px 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .filmstrip::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .filmstrip::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .thumb {
+            flex-shrink: 0;
+            width: 88px;
+            height: 88px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            background: var(--bg);
+            transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+            position: relative;
+        }
+
+        .thumb:hover { transform: translateY(-2px); }
+
+        .thumb.active { border-color: var(--accent); }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: var(--bg);
+        }
+
+        .filmstrip-label {
+            font-size: 0.75rem;
+            color: var(--ink-muted);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            padding-right: 6px;
+        }
+
+        /* Focus */
+        .channel:focus-visible,
+        .icon-btn:focus-visible,
+        .thumb:focus-visible,
+        .item:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .masonry { columns: 3 160px; column-gap: 10px; }
+            .item { margin-bottom: 10px; }
+            .channels { gap: 2px; }
+            .channel { padding: 5px 10px; font-size: 0.8rem; }
+            .detail-title { max-width: 240px; }
+            .detail-stage { padding: 16px; }
+        }
+
+        @media (max-width: 600px) {
+            .header-inner { height: 52px; }
+            .brand { font-size: 1rem; }
+            .masonry { columns: 2 140px; column-gap: 8px; }
+            .item { margin-bottom: 8px; }
+            .intro-bar h1 { font-size: 1.4rem; }
+            .detail-toolbar { padding: 0 12px; }
+            .detail-nav { display: none; }
+            .filmstrip-wrap { height: 100px; padding: 0 12px; }
+            .thumb { width: 72px; height: 72px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <a href="#" class="brand">建筑<span>与</span>营造</a>
+            <nav class="channels" id="channels" role="tablist" aria-label="藏品频道">
+                <button class="channel active" data-filter="all" role="tab" aria-selected="true">全部<span class="count">240</span></button>
+                <button class="channel" data-filter="drawings" role="tab" aria-selected="false">手绘图<span class="count">67</span></button>
+                <button class="channel" data-filter="manuscripts" role="tab" aria-selected="false">手稿<span class="count">53</span></button>
+                <button class="channel" data-filter="sketches" role="tab" aria-selected="false">速写<span class="count">120</span></button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="intro-bar">
+            <h1>建筑图像档案</h1>
+            <p>以梁思成手稿、速写与《图像中国建筑史》手绘图为材料，按频道归档，支持连续浏览与完整图像展示。</p>
+        </div>
+
+        <div class="gallery-wrap">
+            <div class="masonry" id="gallery" aria-live="polite">
+                <div class="item" data-collection="drawings" data-index="0" tabindex="0" aria-label="查看 1 (1)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%281%29.jpg" alt="1 (1)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (1)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="1" tabindex="0" aria-label="查看 1 (10)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2810%29.jpg" alt="1 (10)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (10)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="2" tabindex="0" aria-label="查看 1 (11)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2811%29.jpg" alt="1 (11)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (11)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="3" tabindex="0" aria-label="查看 1 (12)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2812%29.jpg" alt="1 (12)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (12)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="4" tabindex="0" aria-label="查看 1 (13)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2813%29.jpg" alt="1 (13)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (13)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="5" tabindex="0" aria-label="查看 1 (14)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2814%29.jpg" alt="1 (14)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (14)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="6" tabindex="0" aria-label="查看 1 (15)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2815%29.jpg" alt="1 (15)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (15)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="7" tabindex="0" aria-label="查看 1 (16)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2816%29.jpg" alt="1 (16)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (16)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="8" tabindex="0" aria-label="查看 1 (17)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2817%29.jpg" alt="1 (17)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (17)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="9" tabindex="0" aria-label="查看 1 (18)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2818%29.jpg" alt="1 (18)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (18)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="10" tabindex="0" aria-label="查看 1 (19)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2819%29.jpg" alt="1 (19)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (19)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="11" tabindex="0" aria-label="查看 1 (2)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%282%29.jpg" alt="1 (2)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (2)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="12" tabindex="0" aria-label="查看 1 (20)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2820%29.jpg" alt="1 (20)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (20)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="13" tabindex="0" aria-label="查看 1 (21)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2821%29.jpg" alt="1 (21)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (21)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="14" tabindex="0" aria-label="查看 1 (22)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2822%29.jpg" alt="1 (22)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (22)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="15" tabindex="0" aria-label="查看 1 (23)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2823%29.jpg" alt="1 (23)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (23)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="16" tabindex="0" aria-label="查看 1 (24)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2824%29.jpg" alt="1 (24)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (24)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="17" tabindex="0" aria-label="查看 1 (25)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2825%29.jpg" alt="1 (25)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (25)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="18" tabindex="0" aria-label="查看 1 (26)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2826%29.jpg" alt="1 (26)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (26)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="19" tabindex="0" aria-label="查看 1 (27)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2827%29.jpg" alt="1 (27)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (27)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="20" tabindex="0" aria-label="查看 1 (28)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2828%29.jpg" alt="1 (28)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (28)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="21" tabindex="0" aria-label="查看 1 (29)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2829%29.jpg" alt="1 (29)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (29)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="22" tabindex="0" aria-label="查看 1 (3)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%283%29.jpg" alt="1 (3)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (3)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="23" tabindex="0" aria-label="查看 1 (30)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2830%29.jpg" alt="1 (30)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (30)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="24" tabindex="0" aria-label="查看 1 (31)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2831%29.jpg" alt="1 (31)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (31)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="25" tabindex="0" aria-label="查看 1 (32)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2832%29.jpg" alt="1 (32)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (32)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="26" tabindex="0" aria-label="查看 1 (33)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2833%29.jpg" alt="1 (33)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (33)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="27" tabindex="0" aria-label="查看 1 (34)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2834%29.jpg" alt="1 (34)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (34)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="28" tabindex="0" aria-label="查看 1 (35)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2835%29.jpg" alt="1 (35)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (35)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="29" tabindex="0" aria-label="查看 1 (36)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2836%29.jpg" alt="1 (36)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (36)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="30" tabindex="0" aria-label="查看 1 (37)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2837%29.jpg" alt="1 (37)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (37)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="31" tabindex="0" aria-label="查看 1 (38)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2838%29.jpg" alt="1 (38)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (38)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="32" tabindex="0" aria-label="查看 1 (39)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2839%29.jpg" alt="1 (39)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (39)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="33" tabindex="0" aria-label="查看 1 (4)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%284%29.jpg" alt="1 (4)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (4)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="34" tabindex="0" aria-label="查看 1 (40)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2840%29.jpg" alt="1 (40)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (40)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="35" tabindex="0" aria-label="查看 1 (41)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2841%29.jpg" alt="1 (41)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (41)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="36" tabindex="0" aria-label="查看 1 (42)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2842%29.jpg" alt="1 (42)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (42)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="37" tabindex="0" aria-label="查看 1 (43)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2843%29.jpg" alt="1 (43)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (43)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="38" tabindex="0" aria-label="查看 1 (44)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2844%29.jpg" alt="1 (44)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (44)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="39" tabindex="0" aria-label="查看 1 (45)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2845%29.jpg" alt="1 (45)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (45)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="40" tabindex="0" aria-label="查看 1 (46)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2846%29.jpg" alt="1 (46)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (46)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="41" tabindex="0" aria-label="查看 1 (47)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2847%29.jpg" alt="1 (47)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (47)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="42" tabindex="0" aria-label="查看 1 (48)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2848%29.jpg" alt="1 (48)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (48)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="43" tabindex="0" aria-label="查看 1 (49)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2849%29.jpg" alt="1 (49)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (49)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="44" tabindex="0" aria-label="查看 1 (5)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%285%29.jpg" alt="1 (5)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (5)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="45" tabindex="0" aria-label="查看 1 (50)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2850%29.jpg" alt="1 (50)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (50)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="46" tabindex="0" aria-label="查看 1 (51)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2851%29.jpg" alt="1 (51)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (51)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="47" tabindex="0" aria-label="查看 1 (52)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2852%29.jpg" alt="1 (52)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (52)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="48" tabindex="0" aria-label="查看 1 (53)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2853%29.jpg" alt="1 (53)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (53)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="49" tabindex="0" aria-label="查看 1 (54)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2854%29.jpg" alt="1 (54)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (54)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="50" tabindex="0" aria-label="查看 1 (55)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2855%29.jpg" alt="1 (55)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (55)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="51" tabindex="0" aria-label="查看 1 (56)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2856%29.jpg" alt="1 (56)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (56)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="52" tabindex="0" aria-label="查看 1 (57)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2857%29.jpg" alt="1 (57)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (57)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="53" tabindex="0" aria-label="查看 1 (58)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2858%29.jpg" alt="1 (58)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (58)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="54" tabindex="0" aria-label="查看 1 (59)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2859%29.jpg" alt="1 (59)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (59)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="55" tabindex="0" aria-label="查看 1 (6)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%286%29.jpg" alt="1 (6)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (6)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="56" tabindex="0" aria-label="查看 1 (60)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2860%29.jpg" alt="1 (60)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (60)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="57" tabindex="0" aria-label="查看 1 (61)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2861%29.jpg" alt="1 (61)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (61)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="58" tabindex="0" aria-label="查看 1 (62)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2862%29.jpg" alt="1 (62)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (62)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="59" tabindex="0" aria-label="查看 1 (63)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2863%29.jpg" alt="1 (63)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (63)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="60" tabindex="0" aria-label="查看 1 (64)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2864%29.jpg" alt="1 (64)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (64)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="61" tabindex="0" aria-label="查看 1 (65)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2865%29.jpg" alt="1 (65)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (65)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="62" tabindex="0" aria-label="查看 1 (66)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2866%29.jpg" alt="1 (66)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (66)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="63" tabindex="0" aria-label="查看 1 (67)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2867%29.jpg" alt="1 (67)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (67)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="64" tabindex="0" aria-label="查看 1 (7)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%287%29.jpg" alt="1 (7)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (7)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="65" tabindex="0" aria-label="查看 1 (8)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%288%29.jpg" alt="1 (8)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (8)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="drawings" data-index="66" tabindex="0" aria-label="查看 1 (9)">
+                    <img src="%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%289%29.jpg" alt="1 (9)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (9)</div>
+                        <div class="item-channel">图像中国建筑史手绘图</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="67" tabindex="0" aria-label="查看 中国建筑主要部分名称图.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E4%B8%BB%E8%A6%81%E9%83%A8%E5%88%86%E5%90%8D%E7%A7%B0%E5%9B%BE.jpg.jpg" alt="中国建筑主要部分名称图.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">中国建筑主要部分名称图.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="68" tabindex="0" aria-label="查看 云冈石窟所表现之北魏建筑.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E4%BA%91%E5%86%88%E7%9F%B3%E7%AA%9F%E6%89%80%E8%A1%A8%E7%8E%B0%E4%B9%8B%E5%8C%97%E9%AD%8F%E5%BB%BA%E7%AD%91.jpg.jpg" alt="云冈石窟所表现之北魏建筑.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">云冈石窟所表现之北魏建筑.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="69" tabindex="0" aria-label="查看 云南镇南县马鞍山井干构民居.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E4%BA%91%E5%8D%97%E9%95%87%E5%8D%97%E5%8E%BF%E9%A9%AC%E9%9E%8D%E5%B1%B1%E4%BA%95%E5%B9%B2%E6%9E%84%E6%B0%91%E5%B1%85.jpg.jpg" alt="云南镇南县马鞍山井干构民居.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">云南镇南县马鞍山井干构民居.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="70" tabindex="0" aria-label="查看 北平市清故宫三殿总平面图-明末及清建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%8C%97%E5%B9%B3%E5%B8%82%E6%B8%85%E6%95%85%E5%AE%AB%E4%B8%89%E6%AE%BF%E6%80%BB%E5%B9%B3%E9%9D%A2%E5%9B%BE-%E6%98%8E%E6%9C%AB%E5%8F%8A%E6%B8%85%E5%BB%BA.jpg.jpg" alt="北平市清故宫三殿总平面图-明末及清建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">北平市清故宫三殿总平面图-明末及清建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="71" tabindex="0" aria-label="查看 北平清故宫文渊阁-清乾隆四十一年建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%8C%97%E5%B9%B3%E6%B8%85%E6%95%85%E5%AE%AB%E6%96%87%E6%B8%8A%E9%98%81-%E6%B8%85%E4%B9%BE%E9%9A%86%E5%9B%9B%E5%8D%81%E4%B8%80%E5%B9%B4%E5%BB%BA.jpg.jpg" alt="北平清故宫文渊阁-清乾隆四十一年建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">北平清故宫文渊阁-清乾隆四十一年建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="72" tabindex="0" aria-label="查看 北平西山碧云寺金刚宝座塔-清乾隆十三年建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%8C%97%E5%B9%B3%E8%A5%BF%E5%B1%B1%E7%A2%A7%E4%BA%91%E5%AF%BA%E9%87%91%E5%88%9A%E5%AE%9D%E5%BA%A7%E5%A1%94-%E6%B8%85%E4%B9%BE%E9%9A%86%E5%8D%81%E4%B8%89%E5%B9%B4%E5%BB%BA.jpg.jpg" alt="北平西山碧云寺金刚宝座塔-清乾隆十三年建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">北平西山碧云寺金刚宝座塔-清乾隆十三年建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="73" tabindex="0" aria-label="查看 历代拦额普拍坊演变图.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%8E%86%E4%BB%A3%E6%8B%A6%E9%A2%9D%E6%99%AE%E6%8B%8D%E5%9D%8A%E6%BC%94%E5%8F%98%E5%9B%BE.jpg.jpg" alt="历代拦额普拍坊演变图.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">历代拦额普拍坊演变图.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="74" tabindex="0" aria-label="查看 唐代佛殿图-摹自陕西长安大雁塔塔西门门楣石画像.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%94%90%E4%BB%A3%E4%BD%9B%E6%AE%BF%E5%9B%BE-%E6%91%B9%E8%87%AA%E9%99%95%E8%A5%BF%E9%95%BF%E5%AE%89%E5%A4%A7%E9%9B%81%E5%A1%94%E5%A1%94%E8%A5%BF%E9%97%A8%E9%97%A8%E6%A5%A3%E7%9F%B3%E7%94%BB%E5%83%8F.jpg.jpg" alt="唐代佛殿图-摹自陕西长安大雁塔塔西门门楣石画像.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">唐代佛殿图-摹自陕西长安大雁塔塔西门门楣石画像.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="75" tabindex="0" aria-label="查看 四川宜宾县旧州坝白塔-宋崇宁大观间建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%9B%9B%E5%B7%9D%E5%AE%9C%E5%AE%BE%E5%8E%BF%E6%97%A7%E5%B7%9E%E5%9D%9D%E7%99%BD%E5%A1%94-%E5%AE%8B%E5%B4%87%E5%AE%81%E5%A4%A7%E8%A7%82%E9%97%B4%E5%BB%BA.jpg.jpg" alt="四川宜宾县旧州坝白塔-宋崇宁大观间建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">四川宜宾县旧州坝白塔-宋崇宁大观间建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="76" tabindex="0" aria-label="查看 四川宜宾无名墓-南宋孝宗朝建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%9B%9B%E5%B7%9D%E5%AE%9C%E5%AE%BE%E6%97%A0%E5%90%8D%E5%A2%93-%E5%8D%97%E5%AE%8B%E5%AD%9D%E5%AE%97%E6%9C%9D%E5%BB%BA.jpg.jpg" alt="四川宜宾无名墓-南宋孝宗朝建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">四川宜宾无名墓-南宋孝宗朝建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="77" tabindex="0" aria-label="查看 四川彭山县江口镇附近汉崖墓建筑及雕饰.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%9B%9B%E5%B7%9D%E5%BD%AD%E5%B1%B1%E5%8E%BF%E6%B1%9F%E5%8F%A3%E9%95%87%E9%99%84%E8%BF%91%E6%B1%89%E5%B4%96%E5%A2%93%E5%BB%BA%E7%AD%91%E5%8F%8A%E9%9B%95%E9%A5%B0.jpg.jpg" alt="四川彭山县江口镇附近汉崖墓建筑及雕饰.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">四川彭山县江口镇附近汉崖墓建筑及雕饰.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="78" tabindex="0" aria-label="查看 四川灌县安澜桥-清嘉庆八年仿宋旧制建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%9B%9B%E5%B7%9D%E7%81%8C%E5%8E%BF%E5%AE%89%E6%BE%9C%E6%A1%A5-%E6%B8%85%E5%98%89%E5%BA%86%E5%85%AB%E5%B9%B4%E4%BB%BF%E5%AE%8B%E6%97%A7%E5%88%B6%E5%BB%BA.jpg.jpg" alt="四川灌县安澜桥-清嘉庆八年仿宋旧制建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">四川灌县安澜桥-清嘉庆八年仿宋旧制建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="79" tabindex="0" aria-label="查看 宋营造法式大木作制度图样要略.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%AE%8B%E8%90%A5%E9%80%A0%E6%B3%95%E5%BC%8F%E5%A4%A7%E6%9C%A8%E4%BD%9C%E5%88%B6%E5%BA%A6%E5%9B%BE%E6%A0%B7%E8%A6%81%E7%95%A5.jpg.jpg" alt="宋营造法式大木作制度图样要略.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">宋营造法式大木作制度图样要略.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="80" tabindex="0" aria-label="查看 山东曲阜县孔庙奎文阁-明弘治十七年建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E4%B8%9C%E6%9B%B2%E9%98%9C%E5%8E%BF%E5%AD%94%E5%BA%99%E5%A5%8E%E6%96%87%E9%98%81-%E6%98%8E%E5%BC%98%E6%B2%BB%E5%8D%81%E4%B8%83%E5%B9%B4%E5%BB%BA.jpg.jpg" alt="山东曲阜县孔庙奎文阁-明弘治十七年建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山东曲阜县孔庙奎文阁-明弘治十七年建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="81" tabindex="0" aria-label="查看 山东曲阜县孔庙碑亭-金明昌六年建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E4%B8%9C%E6%9B%B2%E9%98%9C%E5%8E%BF%E5%AD%94%E5%BA%99%E7%A2%91%E4%BA%AD-%E9%87%91%E6%98%8E%E6%98%8C%E5%85%AD%E5%B9%B4%E5%BB%BA.jpg.jpg" alt="山东曲阜县孔庙碑亭-金明昌六年建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山东曲阜县孔庙碑亭-金明昌六年建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="82" tabindex="0" aria-label="查看 山东曲阜孔庙大成殿-清雍正八年建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E4%B8%9C%E6%9B%B2%E9%98%9C%E5%AD%94%E5%BA%99%E5%A4%A7%E6%88%90%E6%AE%BF-%E6%B8%85%E9%9B%8D%E6%AD%A3%E5%85%AB%E5%B9%B4%E5%BB%BA.jpg.jpg" alt="山东曲阜孔庙大成殿-清雍正八年建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山东曲阜孔庙大成殿-清雍正八年建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="83" tabindex="0" aria-label="查看 山东曲阜至圣庙平面图.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E4%B8%9C%E6%9B%B2%E9%98%9C%E8%87%B3%E5%9C%A3%E5%BA%99%E5%B9%B3%E9%9D%A2%E5%9B%BE.jpg.jpg" alt="山东曲阜至圣庙平面图.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山东曲阜至圣庙平面图.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="84" tabindex="0" aria-label="查看 山西五台山-佛光寺大殿.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E4%BA%94%E5%8F%B0%E5%B1%B1-%E4%BD%9B%E5%85%89%E5%AF%BA%E5%A4%A7%E6%AE%BF.jpg.jpg" alt="山西五台山-佛光寺大殿.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山西五台山-佛光寺大殿.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="85" tabindex="0" aria-label="查看 山西五台山-佛光寺大雄宝殿-唐大中十一年建为现存最古木构.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E4%BA%94%E5%8F%B0%E5%B1%B1-%E4%BD%9B%E5%85%89%E5%AF%BA%E5%A4%A7%E9%9B%84%E5%AE%9D%E6%AE%BF-%E5%94%90%E5%A4%A7%E4%B8%AD%E5%8D%81%E4%B8%80%E5%B9%B4%E5%BB%BA%E4%B8%BA%E7%8E%B0%E5%AD%98%E6%9C%80%E5%8F%A4%E6%9C%A8%E6%9E%84.jpg.jpg" alt="山西五台山-佛光寺大雄宝殿-唐大中十一年建为现存最古木构.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山西五台山-佛光寺大雄宝殿-唐大中十一年建为现存最古木构.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="86" tabindex="0" aria-label="查看 山西五台山佛光寺文殊殿.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E4%BA%94%E5%8F%B0%E5%B1%B1%E4%BD%9B%E5%85%89%E5%AF%BA%E6%96%87%E6%AE%8A%E6%AE%BF.jpg.jpg" alt="山西五台山佛光寺文殊殿.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山西五台山佛光寺文殊殿.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="87" tabindex="0" aria-label="查看 山西五台山佛光寺晚唐两经幢.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E4%BA%94%E5%8F%B0%E5%B1%B1%E4%BD%9B%E5%85%89%E5%AF%BA%E6%99%9A%E5%94%90%E4%B8%A4%E7%BB%8F%E5%B9%A2.jpg.jpg" alt="山西五台山佛光寺晚唐两经幢.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山西五台山佛光寺晚唐两经幢.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="88" tabindex="0" aria-label="查看 山西五台山佛光寺祖师塔-北齐或隋建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E4%BA%94%E5%8F%B0%E5%B1%B1%E4%BD%9B%E5%85%89%E5%AF%BA%E7%A5%96%E5%B8%88%E5%A1%94-%E5%8C%97%E9%BD%90%E6%88%96%E9%9A%8B%E5%BB%BA.jpg.jpg" alt="山西五台山佛光寺祖师塔-北齐或隋建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山西五台山佛光寺祖师塔-北齐或隋建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="89" tabindex="0" aria-label="查看 山西大同县善化寺大雄宝殿-辽中叶建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E5%A4%A7%E5%90%8C%E5%8E%BF%E5%96%84%E5%8C%96%E5%AF%BA%E5%A4%A7%E9%9B%84%E5%AE%9D%E6%AE%BF-%E8%BE%BD%E4%B8%AD%E5%8F%B6%E5%BB%BA.jpg.jpg" alt="山西大同县善化寺大雄宝殿-辽中叶建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山西大同县善化寺大雄宝殿-辽中叶建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="90" tabindex="0" aria-label="查看 山西大同县善化寺山门-金天会八年至皇统三年间建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E5%A4%A7%E5%90%8C%E5%8E%BF%E5%96%84%E5%8C%96%E5%AF%BA%E5%B1%B1%E9%97%A8-%E9%87%91%E5%A4%A9%E4%BC%9A%E5%85%AB%E5%B9%B4%E8%87%B3%E7%9A%87%E7%BB%9F%E4%B8%89%E5%B9%B4%E9%97%B4%E5%BB%BA.jpg.jpg" alt="山西大同县善化寺山门-金天会八年至皇统三年间建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山西大同县善化寺山门-金天会八年至皇统三年间建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="91" tabindex="0" aria-label="查看 山西大同县善化寺总平面图.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E5%A4%A7%E5%90%8C%E5%8E%BF%E5%96%84%E5%8C%96%E5%AF%BA%E6%80%BB%E5%B9%B3%E9%9D%A2%E5%9B%BE.jpg.jpg" alt="山西大同县善化寺总平面图.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山西大同县善化寺总平面图.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="92" tabindex="0" aria-label="查看 山西太原永祚寺砖殿平面图.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E5%A4%AA%E5%8E%9F%E6%B0%B8%E7%A5%9A%E5%AF%BA%E7%A0%96%E6%AE%BF%E5%B9%B3%E9%9D%A2%E5%9B%BE.jpg.jpg" alt="山西太原永祚寺砖殿平面图.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山西太原永祚寺砖殿平面图.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="93" tabindex="0" aria-label="查看 山西榆次县永寿寺雨花宫-宋大中祥符元年建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E6%A6%86%E6%AC%A1%E5%8E%BF%E6%B0%B8%E5%AF%BF%E5%AF%BA%E9%9B%A8%E8%8A%B1%E5%AE%AB-%E5%AE%8B%E5%A4%A7%E4%B8%AD%E7%A5%A5%E7%AC%A6%E5%85%83%E5%B9%B4%E5%BB%BA.jpg.jpg" alt="山西榆次县永寿寺雨花宫-宋大中祥符元年建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山西榆次县永寿寺雨花宫-宋大中祥符元年建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="94" tabindex="0" aria-label="查看 山西榆次永寿寺雨华宫-宋大中祥符元年建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E6%A6%86%E6%AC%A1%E6%B0%B8%E5%AF%BF%E5%AF%BA%E9%9B%A8%E5%8D%8E%E5%AE%AB-%E5%AE%8B%E5%A4%A7%E4%B8%AD%E7%A5%A5%E7%AC%A6%E5%85%83%E5%B9%B4%E5%BB%BA.jpg.jpg" alt="山西榆次永寿寺雨华宫-宋大中祥符元年建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">山西榆次永寿寺雨华宫-宋大中祥符元年建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="95" tabindex="0" aria-label="查看 敦煌石室画卷中唐代建筑部分详图.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%95%A6%E7%85%8C%E7%9F%B3%E5%AE%A4%E7%94%BB%E5%8D%B7%E4%B8%AD%E5%94%90%E4%BB%A3%E5%BB%BA%E7%AD%91%E9%83%A8%E5%88%86%E8%AF%A6%E5%9B%BE.jpg.jpg" alt="敦煌石室画卷中唐代建筑部分详图.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">敦煌石室画卷中唐代建筑部分详图.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="96" tabindex="0" aria-label="查看 曲阳北岳庙德宁之殿平面图-元至元七年建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%9B%B2%E9%98%B3%E5%8C%97%E5%B2%B3%E5%BA%99%E5%BE%B7%E5%AE%81%E4%B9%8B%E6%AE%BF%E5%B9%B3%E9%9D%A2%E5%9B%BE-%E5%85%83%E8%87%B3%E5%85%83%E4%B8%83%E5%B9%B4%E5%BB%BA.jpg.jpg" alt="曲阳北岳庙德宁之殿平面图-元至元七年建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">曲阳北岳庙德宁之殿平面图-元至元七年建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="97" tabindex="0" aria-label="查看 汉墓石室.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B1%89%E5%A2%93%E7%9F%B3%E5%AE%A4.jpg.jpg" alt="汉墓石室.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">汉墓石室.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="98" tabindex="0" aria-label="查看 汉明器建筑物数种.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B1%89%E6%98%8E%E5%99%A8%E5%BB%BA%E7%AD%91%E7%89%A9%E6%95%B0%E7%A7%8D.jpg.jpg" alt="汉明器建筑物数种.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">汉明器建筑物数种.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="99" tabindex="0" aria-label="查看 汉画像石中建筑数种.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B1%89%E7%94%BB%E5%83%8F%E7%9F%B3%E4%B8%AD%E5%BB%BA%E7%AD%91%E6%95%B0%E7%A7%8D.jpg.jpg" alt="汉画像石中建筑数种.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">汉画像石中建筑数种.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="100" tabindex="0" aria-label="查看 汉石阙数种.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B1%89%E7%9F%B3%E9%98%99%E6%95%B0%E7%A7%8D.jpg.jpg" alt="汉石阙数种.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">汉石阙数种.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="101" tabindex="0" aria-label="查看 江苏吴县罗汉院双塔.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B1%9F%E8%8B%8F%E5%90%B4%E5%8E%BF%E7%BD%97%E6%B1%89%E9%99%A2%E5%8F%8C%E5%A1%94.jpg.jpg" alt="江苏吴县罗汉院双塔.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">江苏吴县罗汉院双塔.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="102" tabindex="0" aria-label="查看 河北宝坻县广济寺三大士殿">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E5%AE%9D%E5%9D%BB%E5%8E%BF%E5%B9%BF%E6%B5%8E%E5%AF%BA%E4%B8%89%E5%A4%A7%E5%A3%AB%E6%AE%BF.jpg" alt="河北宝坻县广济寺三大士殿" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河北宝坻县广济寺三大士殿</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="103" tabindex="0" aria-label="查看 河北昌平县明长陵总平面图-明永乐七年至二十二年间建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E6%98%8C%E5%B9%B3%E5%8E%BF%E6%98%8E%E9%95%BF%E9%99%B5%E6%80%BB%E5%B9%B3%E9%9D%A2%E5%9B%BE-%E6%98%8E%E6%B0%B8%E4%B9%90%E4%B8%83%E5%B9%B4%E8%87%B3%E4%BA%8C%E5%8D%81%E4%BA%8C%E5%B9%B4%E9%97%B4%E5%BB%BA.jpg.jpg" alt="河北昌平县明长陵总平面图-明永乐七年至二十二年间建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河北昌平县明长陵总平面图-明永乐七年至二十二年间建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="104" tabindex="0" aria-label="查看 河北昌平县明长陵稷恩殿-明永乐间建">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E6%98%8C%E5%B9%B3%E5%8E%BF%E6%98%8E%E9%95%BF%E9%99%B5%E7%A8%B7%E6%81%A9%E6%AE%BF-%E6%98%8E%E6%B0%B8%E4%B9%90%E9%97%B4%E5%BB%BA.jpg" alt="河北昌平县明长陵稷恩殿-明永乐间建" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河北昌平县明长陵稷恩殿-明永乐间建</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="105" tabindex="0" aria-label="查看 河北正定县阳和楼-元建或者金末.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E6%AD%A3%E5%AE%9A%E5%8E%BF%E9%98%B3%E5%92%8C%E6%A5%BC-%E5%85%83%E5%BB%BA%E6%88%96%E8%80%85%E9%87%91%E6%9C%AB.jpg.jpg" alt="河北正定县阳和楼-元建或者金末.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河北正定县阳和楼-元建或者金末.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="106" tabindex="0" aria-label="查看 河北正定县龙兴寺转轮藏殿-宋建">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E6%AD%A3%E5%AE%9A%E5%8E%BF%E9%BE%99%E5%85%B4%E5%AF%BA%E8%BD%AC%E8%BD%AE%E8%97%8F%E6%AE%BF-%E5%AE%8B%E5%BB%BA.jpg" alt="河北正定县龙兴寺转轮藏殿-宋建" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河北正定县龙兴寺转轮藏殿-宋建</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="107" tabindex="0" aria-label="查看 河北蓟县独乐寺山门-辽统和二年建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E8%93%9F%E5%8E%BF%E7%8B%AC%E4%B9%90%E5%AF%BA%E5%B1%B1%E9%97%A8-%E8%BE%BD%E7%BB%9F%E5%92%8C%E4%BA%8C%E5%B9%B4%E5%BB%BA.jpg.jpg" alt="河北蓟县独乐寺山门-辽统和二年建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河北蓟县独乐寺山门-辽统和二年建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="108" tabindex="0" aria-label="查看 河北蓟县独乐寺观音阁">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E8%93%9F%E5%8E%BF%E7%8B%AC%E4%B9%90%E5%AF%BA%E8%A7%82%E9%9F%B3%E9%98%81.jpg" alt="河北蓟县独乐寺观音阁" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河北蓟县独乐寺观音阁</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="109" tabindex="0" aria-label="查看 河北赵县安济桥(大石桥)隋李春建">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E8%B5%B5%E5%8E%BF%E5%AE%89%E6%B5%8E%E6%A1%A5%28%E5%A4%A7%E7%9F%B3%E6%A1%A5%29%E9%9A%8B%E6%9D%8E%E6%98%A5%E5%BB%BA.jpg" alt="河北赵县安济桥(大石桥)隋李春建" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河北赵县安济桥(大石桥)隋李春建</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="110" tabindex="0" aria-label="查看 河北赵县永通桥金明昌间.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E8%B5%B5%E5%8E%BF%E6%B0%B8%E9%80%9A%E6%A1%A5%E9%87%91%E6%98%8E%E6%98%8C%E9%97%B4.jpg.jpg" alt="河北赵县永通桥金明昌间.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河北赵县永通桥金明昌间.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="111" tabindex="0" aria-label="查看 河南安阳殷墟宫殿遗址平面图-1.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8D%97%E5%AE%89%E9%98%B3%E6%AE%B7%E5%A2%9F%E5%AE%AB%E6%AE%BF%E9%81%97%E5%9D%80%E5%B9%B3%E9%9D%A2%E5%9B%BE-1.jpg.jpg" alt="河南安阳殷墟宫殿遗址平面图-1.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河南安阳殷墟宫殿遗址平面图-1.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="112" tabindex="0" aria-label="查看 河南安阳殷墟宫殿遗址平面图.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8D%97%E5%AE%89%E9%98%B3%E6%AE%B7%E5%A2%9F%E5%AE%AB%E6%AE%BF%E9%81%97%E5%9D%80%E5%B9%B3%E9%9D%A2%E5%9B%BE.jpg.jpg" alt="河南安阳殷墟宫殿遗址平面图.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河南安阳殷墟宫殿遗址平面图.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="113" tabindex="0" aria-label="查看 河南嵩山嵩岳寺塔平面图.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8D%97%E5%B5%A9%E5%B1%B1%E5%B5%A9%E5%B2%B3%E5%AF%BA%E5%A1%94%E5%B9%B3%E9%9D%A2%E5%9B%BE.jpg.jpg" alt="河南嵩山嵩岳寺塔平面图.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河南嵩山嵩岳寺塔平面图.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="114" tabindex="0" aria-label="查看 河南登封县告成镇测景台-元郭守敬建.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8D%97%E7%99%BB%E5%B0%81%E5%8E%BF%E5%91%8A%E6%88%90%E9%95%87%E6%B5%8B%E6%99%AF%E5%8F%B0-%E5%85%83%E9%83%AD%E5%AE%88%E6%95%AC%E5%BB%BA.jpg.jpg" alt="河南登封县告成镇测景台-元郭守敬建.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河南登封县告成镇测景台-元郭守敬建.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="115" tabindex="0" aria-label="查看 河南登封县少林寺初祖庵.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8D%97%E7%99%BB%E5%B0%81%E5%8E%BF%E5%B0%91%E6%9E%97%E5%AF%BA%E5%88%9D%E7%A5%96%E5%BA%B5.jpg.jpg" alt="河南登封县少林寺初祖庵.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">河南登封县少林寺初祖庵.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="116" tabindex="0" aria-label="查看 清官式样三孔石桥做法要略.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B8%85%E5%AE%98%E5%BC%8F%E6%A0%B7%E4%B8%89%E5%AD%94%E7%9F%B3%E6%A1%A5%E5%81%9A%E6%B3%95%E8%A6%81%E7%95%A5.jpg.jpg" alt="清官式样三孔石桥做法要略.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">清官式样三孔石桥做法要略.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="117" tabindex="0" aria-label="查看 清昌陵地宫断面及平面图(陵在河北省易县).jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B8%85%E6%98%8C%E9%99%B5%E5%9C%B0%E5%AE%AB%E6%96%AD%E9%9D%A2%E5%8F%8A%E5%B9%B3%E9%9D%A2%E5%9B%BE%28%E9%99%B5%E5%9C%A8%E6%B2%B3%E5%8C%97%E7%9C%81%E6%98%93%E5%8E%BF%29.jpg.jpg" alt="清昌陵地宫断面及平面图(陵在河北省易县).jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">清昌陵地宫断面及平面图(陵在河北省易县).jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="118" tabindex="0" aria-label="查看 采桑猎坊拓本宫室图-战国时代.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E9%87%87%E6%A1%91%E7%8C%8E%E5%9D%8A%E6%8B%93%E6%9C%AC%E5%AE%AB%E5%AE%A4%E5%9B%BE-%E6%88%98%E5%9B%BD%E6%97%B6%E4%BB%A3.jpg.jpg" alt="采桑猎坊拓本宫室图-战国时代.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">采桑猎坊拓本宫室图-战国时代.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="manuscripts" data-index="119" tabindex="0" aria-label="查看 齐隋建筑遗例.jpg">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E9%BD%90%E9%9A%8B%E5%BB%BA%E7%AD%91%E9%81%97%E4%BE%8B.jpg.jpg" alt="齐隋建筑遗例.jpg" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">齐隋建筑遗例.jpg</div>
+                        <div class="item-channel">梁思成手稿</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="120" tabindex="0" aria-label="查看 1 (1)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%281%29.jpg" alt="1 (1)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (1)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="121" tabindex="0" aria-label="查看 1 (10)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2810%29.jpg" alt="1 (10)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (10)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="122" tabindex="0" aria-label="查看 1 (100)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28100%29.jpg" alt="1 (100)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (100)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="123" tabindex="0" aria-label="查看 1 (101)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28101%29.jpg" alt="1 (101)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (101)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="124" tabindex="0" aria-label="查看 1 (102)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28102%29.jpg" alt="1 (102)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (102)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="125" tabindex="0" aria-label="查看 1 (103)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28103%29.jpg" alt="1 (103)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (103)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="126" tabindex="0" aria-label="查看 1 (104)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28104%29.jpg" alt="1 (104)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (104)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="127" tabindex="0" aria-label="查看 1 (105)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28105%29.jpg" alt="1 (105)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (105)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="128" tabindex="0" aria-label="查看 1 (106)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28106%29.jpg" alt="1 (106)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (106)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="129" tabindex="0" aria-label="查看 1 (107)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28107%29.jpg" alt="1 (107)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (107)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="130" tabindex="0" aria-label="查看 1 (108)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28108%29.jpg" alt="1 (108)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (108)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="131" tabindex="0" aria-label="查看 1 (109)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28109%29.jpg" alt="1 (109)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (109)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="132" tabindex="0" aria-label="查看 1 (11)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2811%29.jpg" alt="1 (11)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (11)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="133" tabindex="0" aria-label="查看 1 (110)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28110%29.jpg" alt="1 (110)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (110)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="134" tabindex="0" aria-label="查看 1 (111)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28111%29.jpg" alt="1 (111)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (111)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="135" tabindex="0" aria-label="查看 1 (112)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28112%29.jpg" alt="1 (112)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (112)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="136" tabindex="0" aria-label="查看 1 (113)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28113%29.jpg" alt="1 (113)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (113)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="137" tabindex="0" aria-label="查看 1 (114)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28114%29.jpg" alt="1 (114)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (114)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="138" tabindex="0" aria-label="查看 1 (115)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28115%29.jpg" alt="1 (115)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (115)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="139" tabindex="0" aria-label="查看 1 (116)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28116%29.jpg" alt="1 (116)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (116)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="140" tabindex="0" aria-label="查看 1 (117)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28117%29.jpg" alt="1 (117)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (117)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="141" tabindex="0" aria-label="查看 1 (118)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28118%29.jpg" alt="1 (118)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (118)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="142" tabindex="0" aria-label="查看 1 (119)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28119%29.jpg" alt="1 (119)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (119)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="143" tabindex="0" aria-label="查看 1 (12)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2812%29.jpg" alt="1 (12)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (12)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="144" tabindex="0" aria-label="查看 1 (120)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28120%29.jpg" alt="1 (120)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (120)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="145" tabindex="0" aria-label="查看 1 (13)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2813%29.jpg" alt="1 (13)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (13)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="146" tabindex="0" aria-label="查看 1 (14)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2814%29.jpg" alt="1 (14)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (14)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="147" tabindex="0" aria-label="查看 1 (15)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2815%29.jpg" alt="1 (15)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (15)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="148" tabindex="0" aria-label="查看 1 (16)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2816%29.jpg" alt="1 (16)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (16)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="149" tabindex="0" aria-label="查看 1 (17)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2817%29.jpg" alt="1 (17)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (17)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="150" tabindex="0" aria-label="查看 1 (18)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2818%29.jpg" alt="1 (18)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (18)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="151" tabindex="0" aria-label="查看 1 (19)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2819%29.jpg" alt="1 (19)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (19)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="152" tabindex="0" aria-label="查看 1 (2)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%282%29.jpg" alt="1 (2)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (2)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="153" tabindex="0" aria-label="查看 1 (20)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2820%29.jpg" alt="1 (20)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (20)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="154" tabindex="0" aria-label="查看 1 (21)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2821%29.jpg" alt="1 (21)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (21)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="155" tabindex="0" aria-label="查看 1 (22)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2822%29.jpg" alt="1 (22)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (22)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="156" tabindex="0" aria-label="查看 1 (23)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2823%29.jpg" alt="1 (23)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (23)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="157" tabindex="0" aria-label="查看 1 (24)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2824%29.jpg" alt="1 (24)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (24)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="158" tabindex="0" aria-label="查看 1 (25)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2825%29.jpg" alt="1 (25)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (25)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="159" tabindex="0" aria-label="查看 1 (26)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2826%29.jpg" alt="1 (26)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (26)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="160" tabindex="0" aria-label="查看 1 (27)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2827%29.jpg" alt="1 (27)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (27)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="161" tabindex="0" aria-label="查看 1 (28)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2828%29.jpg" alt="1 (28)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (28)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="162" tabindex="0" aria-label="查看 1 (29)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2829%29.jpg" alt="1 (29)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (29)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="163" tabindex="0" aria-label="查看 1 (3)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%283%29.jpg" alt="1 (3)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (3)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="164" tabindex="0" aria-label="查看 1 (30)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2830%29.jpg" alt="1 (30)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (30)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="165" tabindex="0" aria-label="查看 1 (31)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2831%29.jpg" alt="1 (31)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (31)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="166" tabindex="0" aria-label="查看 1 (32)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2832%29.jpg" alt="1 (32)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (32)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="167" tabindex="0" aria-label="查看 1 (33)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2833%29.jpg" alt="1 (33)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (33)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="168" tabindex="0" aria-label="查看 1 (34)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2834%29.jpg" alt="1 (34)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (34)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="169" tabindex="0" aria-label="查看 1 (35)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2835%29.jpg" alt="1 (35)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (35)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="170" tabindex="0" aria-label="查看 1 (36)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2836%29.jpg" alt="1 (36)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (36)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="171" tabindex="0" aria-label="查看 1 (37)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2837%29.jpg" alt="1 (37)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (37)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="172" tabindex="0" aria-label="查看 1 (38)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2838%29.jpg" alt="1 (38)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (38)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="173" tabindex="0" aria-label="查看 1 (39)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2839%29.jpg" alt="1 (39)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (39)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="174" tabindex="0" aria-label="查看 1 (4)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%284%29.jpg" alt="1 (4)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (4)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="175" tabindex="0" aria-label="查看 1 (40)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2840%29.jpg" alt="1 (40)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (40)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="176" tabindex="0" aria-label="查看 1 (41)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2841%29.jpg" alt="1 (41)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (41)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="177" tabindex="0" aria-label="查看 1 (42)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2842%29.jpg" alt="1 (42)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (42)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="178" tabindex="0" aria-label="查看 1 (43)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2843%29.jpg" alt="1 (43)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (43)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="179" tabindex="0" aria-label="查看 1 (44)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2844%29.jpg" alt="1 (44)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (44)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="180" tabindex="0" aria-label="查看 1 (45)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2845%29.jpg" alt="1 (45)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (45)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="181" tabindex="0" aria-label="查看 1 (46)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2846%29.jpg" alt="1 (46)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (46)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="182" tabindex="0" aria-label="查看 1 (47)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2847%29.jpg" alt="1 (47)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (47)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="183" tabindex="0" aria-label="查看 1 (48)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2848%29.jpg" alt="1 (48)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (48)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="184" tabindex="0" aria-label="查看 1 (49)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2849%29.jpg" alt="1 (49)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (49)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="185" tabindex="0" aria-label="查看 1 (5)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%285%29.jpg" alt="1 (5)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (5)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="186" tabindex="0" aria-label="查看 1 (50)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2850%29.jpg" alt="1 (50)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (50)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="187" tabindex="0" aria-label="查看 1 (51)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2851%29.jpg" alt="1 (51)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (51)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="188" tabindex="0" aria-label="查看 1 (52)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2852%29.jpg" alt="1 (52)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (52)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="189" tabindex="0" aria-label="查看 1 (53)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2853%29.jpg" alt="1 (53)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (53)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="190" tabindex="0" aria-label="查看 1 (54)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2854%29.jpg" alt="1 (54)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (54)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="191" tabindex="0" aria-label="查看 1 (55)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2855%29.jpg" alt="1 (55)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (55)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="192" tabindex="0" aria-label="查看 1 (56)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2856%29.jpg" alt="1 (56)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (56)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="193" tabindex="0" aria-label="查看 1 (57)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2857%29.jpg" alt="1 (57)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (57)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="194" tabindex="0" aria-label="查看 1 (58)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2858%29.jpg" alt="1 (58)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (58)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="195" tabindex="0" aria-label="查看 1 (59)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2859%29.jpg" alt="1 (59)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (59)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="196" tabindex="0" aria-label="查看 1 (6)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%286%29.jpg" alt="1 (6)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (6)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="197" tabindex="0" aria-label="查看 1 (60)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2860%29.jpg" alt="1 (60)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (60)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="198" tabindex="0" aria-label="查看 1 (61)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2861%29.jpg" alt="1 (61)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (61)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="199" tabindex="0" aria-label="查看 1 (62)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2862%29.jpg" alt="1 (62)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (62)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="200" tabindex="0" aria-label="查看 1 (63)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2863%29.jpg" alt="1 (63)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (63)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="201" tabindex="0" aria-label="查看 1 (64)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2864%29.jpg" alt="1 (64)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (64)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="202" tabindex="0" aria-label="查看 1 (65)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2865%29.jpg" alt="1 (65)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (65)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="203" tabindex="0" aria-label="查看 1 (66)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2866%29.jpg" alt="1 (66)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (66)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="204" tabindex="0" aria-label="查看 1 (67)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2867%29.jpg" alt="1 (67)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (67)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="205" tabindex="0" aria-label="查看 1 (68)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2868%29.jpg" alt="1 (68)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (68)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="206" tabindex="0" aria-label="查看 1 (69)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2869%29.jpg" alt="1 (69)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (69)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="207" tabindex="0" aria-label="查看 1 (7)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%287%29.jpg" alt="1 (7)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (7)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="208" tabindex="0" aria-label="查看 1 (70)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2870%29.jpg" alt="1 (70)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (70)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="209" tabindex="0" aria-label="查看 1 (71)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2871%29.jpg" alt="1 (71)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (71)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="210" tabindex="0" aria-label="查看 1 (72)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2872%29.jpg" alt="1 (72)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (72)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="211" tabindex="0" aria-label="查看 1 (73)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2873%29.jpg" alt="1 (73)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (73)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="212" tabindex="0" aria-label="查看 1 (74)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2874%29.jpg" alt="1 (74)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (74)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="213" tabindex="0" aria-label="查看 1 (75)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2875%29.jpg" alt="1 (75)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (75)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="214" tabindex="0" aria-label="查看 1 (76)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2876%29.jpg" alt="1 (76)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (76)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="215" tabindex="0" aria-label="查看 1 (77)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2877%29.jpg" alt="1 (77)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (77)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="216" tabindex="0" aria-label="查看 1 (78)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2878%29.jpg" alt="1 (78)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (78)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="217" tabindex="0" aria-label="查看 1 (79)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2879%29.jpg" alt="1 (79)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (79)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="218" tabindex="0" aria-label="查看 1 (8)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%288%29.jpg" alt="1 (8)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (8)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="219" tabindex="0" aria-label="查看 1 (80)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2880%29.jpg" alt="1 (80)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (80)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="220" tabindex="0" aria-label="查看 1 (81)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2881%29.jpg" alt="1 (81)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (81)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="221" tabindex="0" aria-label="查看 1 (82)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2882%29.jpg" alt="1 (82)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (82)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="222" tabindex="0" aria-label="查看 1 (83)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2883%29.jpg" alt="1 (83)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (83)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="223" tabindex="0" aria-label="查看 1 (84)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2884%29.jpg" alt="1 (84)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (84)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="224" tabindex="0" aria-label="查看 1 (85)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2885%29.jpg" alt="1 (85)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (85)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="225" tabindex="0" aria-label="查看 1 (86)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2886%29.jpg" alt="1 (86)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (86)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="226" tabindex="0" aria-label="查看 1 (87)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2887%29.jpg" alt="1 (87)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (87)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="227" tabindex="0" aria-label="查看 1 (88)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2888%29.jpg" alt="1 (88)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (88)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="228" tabindex="0" aria-label="查看 1 (89)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2889%29.jpg" alt="1 (89)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (89)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="229" tabindex="0" aria-label="查看 1 (9)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%289%29.jpg" alt="1 (9)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (9)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="230" tabindex="0" aria-label="查看 1 (90)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2890%29.jpg" alt="1 (90)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (90)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="231" tabindex="0" aria-label="查看 1 (91)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2891%29.jpg" alt="1 (91)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (91)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="232" tabindex="0" aria-label="查看 1 (92)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2892%29.jpg" alt="1 (92)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (92)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="233" tabindex="0" aria-label="查看 1 (93)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2893%29.jpg" alt="1 (93)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (93)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="234" tabindex="0" aria-label="查看 1 (94)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2894%29.jpg" alt="1 (94)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (94)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="235" tabindex="0" aria-label="查看 1 (95)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2895%29.jpg" alt="1 (95)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (95)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="236" tabindex="0" aria-label="查看 1 (96)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2896%29.jpg" alt="1 (96)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (96)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="237" tabindex="0" aria-label="查看 1 (97)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2897%29.jpg" alt="1 (97)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (97)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="238" tabindex="0" aria-label="查看 1 (98)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2898%29.jpg" alt="1 (98)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (98)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+                <div class="item" data-collection="sketches" data-index="239" tabindex="0" aria-label="查看 1 (99)">
+                    <img src="%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2899%29.jpg" alt="1 (99)" loading="lazy">
+                    <div class="item-meta">
+                        <div class="item-title">1 (99)</div>
+                        <div class="item-channel">梁思成速写</div>
+                    </div>
+                </div>
+            </div>
+            <div class="empty" id="empty" style="display:none">该频道暂无图像。</div>
+        </div>
+    </main>
+
+    <div class="detail" id="detail" role="dialog" aria-modal="true" aria-label="图像详情">
+        <div class="detail-toolbar">
+            <div class="detail-info">
+                <span class="detail-channel" id="detailChannel"></span>
+                <span class="detail-title" id="detailTitle"></span>
+            </div>
+            <div class="detail-actions">
+                <button class="icon-btn" id="prevBtn" aria-label="上一张">&#10094;</button>
+                <button class="icon-btn" id="nextBtn" aria-label="下一张">&#10095;</button>
+                <button class="icon-btn" id="closeBtn" aria-label="关闭">&times;</button>
+            </div>
+        </div>
+        <div class="detail-stage">
+            <button class="detail-nav detail-prev" id="stagePrev" aria-label="上一张">&#10094;</button>
+            <img class="detail-main" id="detailImg" src="" alt="">
+            <button class="detail-nav detail-next" id="stageNext" aria-label="下一张">&#10095;</button>
+        </div>
+        <div class="filmstrip-wrap">
+            <span class="filmstrip-label">同频道</span>
+            <div class="filmstrip" id="filmstrip"></div>
+        </div>
+    </div>
+
+    <script>
+        const collections = [
+{id: "drawings", title: "图像中国建筑史手绘图", images: [{'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%281%29.jpg', 'name': '1 (1)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2810%29.jpg', 'name': '1 (10)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2811%29.jpg', 'name': '1 (11)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2812%29.jpg', 'name': '1 (12)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2813%29.jpg', 'name': '1 (13)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2814%29.jpg', 'name': '1 (14)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2815%29.jpg', 'name': '1 (15)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2816%29.jpg', 'name': '1 (16)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2817%29.jpg', 'name': '1 (17)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2818%29.jpg', 'name': '1 (18)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2819%29.jpg', 'name': '1 (19)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%282%29.jpg', 'name': '1 (2)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2820%29.jpg', 'name': '1 (20)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2821%29.jpg', 'name': '1 (21)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2822%29.jpg', 'name': '1 (22)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2823%29.jpg', 'name': '1 (23)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2824%29.jpg', 'name': '1 (24)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2825%29.jpg', 'name': '1 (25)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2826%29.jpg', 'name': '1 (26)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2827%29.jpg', 'name': '1 (27)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2828%29.jpg', 'name': '1 (28)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2829%29.jpg', 'name': '1 (29)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%283%29.jpg', 'name': '1 (3)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2830%29.jpg', 'name': '1 (30)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2831%29.jpg', 'name': '1 (31)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2832%29.jpg', 'name': '1 (32)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2833%29.jpg', 'name': '1 (33)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2834%29.jpg', 'name': '1 (34)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2835%29.jpg', 'name': '1 (35)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2836%29.jpg', 'name': '1 (36)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2837%29.jpg', 'name': '1 (37)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2838%29.jpg', 'name': '1 (38)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2839%29.jpg', 'name': '1 (39)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%284%29.jpg', 'name': '1 (4)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2840%29.jpg', 'name': '1 (40)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2841%29.jpg', 'name': '1 (41)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2842%29.jpg', 'name': '1 (42)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2843%29.jpg', 'name': '1 (43)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2844%29.jpg', 'name': '1 (44)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2845%29.jpg', 'name': '1 (45)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2846%29.jpg', 'name': '1 (46)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2847%29.jpg', 'name': '1 (47)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2848%29.jpg', 'name': '1 (48)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2849%29.jpg', 'name': '1 (49)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%285%29.jpg', 'name': '1 (5)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2850%29.jpg', 'name': '1 (50)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2851%29.jpg', 'name': '1 (51)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2852%29.jpg', 'name': '1 (52)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2853%29.jpg', 'name': '1 (53)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2854%29.jpg', 'name': '1 (54)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2855%29.jpg', 'name': '1 (55)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2856%29.jpg', 'name': '1 (56)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2857%29.jpg', 'name': '1 (57)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2858%29.jpg', 'name': '1 (58)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2859%29.jpg', 'name': '1 (59)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%286%29.jpg', 'name': '1 (6)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2860%29.jpg', 'name': '1 (60)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2861%29.jpg', 'name': '1 (61)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2862%29.jpg', 'name': '1 (62)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2863%29.jpg', 'name': '1 (63)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2864%29.jpg', 'name': '1 (64)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2865%29.jpg', 'name': '1 (65)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2866%29.jpg', 'name': '1 (66)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%2867%29.jpg', 'name': '1 (67)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%287%29.jpg', 'name': '1 (7)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%288%29.jpg', 'name': '1 (8)'}, {'src': '%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E5%8F%B2%E6%89%8B%E7%BB%98%E5%9B%BEJPG%2BPDF/1%20%289%29.jpg', 'name': '1 (9)'}]},
+{id: "manuscripts", title: "梁思成手稿", images: [{'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E4%B8%AD%E5%9B%BD%E5%BB%BA%E7%AD%91%E4%B8%BB%E8%A6%81%E9%83%A8%E5%88%86%E5%90%8D%E7%A7%B0%E5%9B%BE.jpg.jpg', 'name': '中国建筑主要部分名称图.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E4%BA%91%E5%86%88%E7%9F%B3%E7%AA%9F%E6%89%80%E8%A1%A8%E7%8E%B0%E4%B9%8B%E5%8C%97%E9%AD%8F%E5%BB%BA%E7%AD%91.jpg.jpg', 'name': '云冈石窟所表现之北魏建筑.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E4%BA%91%E5%8D%97%E9%95%87%E5%8D%97%E5%8E%BF%E9%A9%AC%E9%9E%8D%E5%B1%B1%E4%BA%95%E5%B9%B2%E6%9E%84%E6%B0%91%E5%B1%85.jpg.jpg', 'name': '云南镇南县马鞍山井干构民居.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%8C%97%E5%B9%B3%E5%B8%82%E6%B8%85%E6%95%85%E5%AE%AB%E4%B8%89%E6%AE%BF%E6%80%BB%E5%B9%B3%E9%9D%A2%E5%9B%BE-%E6%98%8E%E6%9C%AB%E5%8F%8A%E6%B8%85%E5%BB%BA.jpg.jpg', 'name': '北平市清故宫三殿总平面图-明末及清建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%8C%97%E5%B9%B3%E6%B8%85%E6%95%85%E5%AE%AB%E6%96%87%E6%B8%8A%E9%98%81-%E6%B8%85%E4%B9%BE%E9%9A%86%E5%9B%9B%E5%8D%81%E4%B8%80%E5%B9%B4%E5%BB%BA.jpg.jpg', 'name': '北平清故宫文渊阁-清乾隆四十一年建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%8C%97%E5%B9%B3%E8%A5%BF%E5%B1%B1%E7%A2%A7%E4%BA%91%E5%AF%BA%E9%87%91%E5%88%9A%E5%AE%9D%E5%BA%A7%E5%A1%94-%E6%B8%85%E4%B9%BE%E9%9A%86%E5%8D%81%E4%B8%89%E5%B9%B4%E5%BB%BA.jpg.jpg', 'name': '北平西山碧云寺金刚宝座塔-清乾隆十三年建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%8E%86%E4%BB%A3%E6%8B%A6%E9%A2%9D%E6%99%AE%E6%8B%8D%E5%9D%8A%E6%BC%94%E5%8F%98%E5%9B%BE.jpg.jpg', 'name': '历代拦额普拍坊演变图.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%94%90%E4%BB%A3%E4%BD%9B%E6%AE%BF%E5%9B%BE-%E6%91%B9%E8%87%AA%E9%99%95%E8%A5%BF%E9%95%BF%E5%AE%89%E5%A4%A7%E9%9B%81%E5%A1%94%E5%A1%94%E8%A5%BF%E9%97%A8%E9%97%A8%E6%A5%A3%E7%9F%B3%E7%94%BB%E5%83%8F.jpg.jpg', 'name': '唐代佛殿图-摹自陕西长安大雁塔塔西门门楣石画像.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%9B%9B%E5%B7%9D%E5%AE%9C%E5%AE%BE%E5%8E%BF%E6%97%A7%E5%B7%9E%E5%9D%9D%E7%99%BD%E5%A1%94-%E5%AE%8B%E5%B4%87%E5%AE%81%E5%A4%A7%E8%A7%82%E9%97%B4%E5%BB%BA.jpg.jpg', 'name': '四川宜宾县旧州坝白塔-宋崇宁大观间建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%9B%9B%E5%B7%9D%E5%AE%9C%E5%AE%BE%E6%97%A0%E5%90%8D%E5%A2%93-%E5%8D%97%E5%AE%8B%E5%AD%9D%E5%AE%97%E6%9C%9D%E5%BB%BA.jpg.jpg', 'name': '四川宜宾无名墓-南宋孝宗朝建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%9B%9B%E5%B7%9D%E5%BD%AD%E5%B1%B1%E5%8E%BF%E6%B1%9F%E5%8F%A3%E9%95%87%E9%99%84%E8%BF%91%E6%B1%89%E5%B4%96%E5%A2%93%E5%BB%BA%E7%AD%91%E5%8F%8A%E9%9B%95%E9%A5%B0.jpg.jpg', 'name': '四川彭山县江口镇附近汉崖墓建筑及雕饰.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%9B%9B%E5%B7%9D%E7%81%8C%E5%8E%BF%E5%AE%89%E6%BE%9C%E6%A1%A5-%E6%B8%85%E5%98%89%E5%BA%86%E5%85%AB%E5%B9%B4%E4%BB%BF%E5%AE%8B%E6%97%A7%E5%88%B6%E5%BB%BA.jpg.jpg', 'name': '四川灌县安澜桥-清嘉庆八年仿宋旧制建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%AE%8B%E8%90%A5%E9%80%A0%E6%B3%95%E5%BC%8F%E5%A4%A7%E6%9C%A8%E4%BD%9C%E5%88%B6%E5%BA%A6%E5%9B%BE%E6%A0%B7%E8%A6%81%E7%95%A5.jpg.jpg', 'name': '宋营造法式大木作制度图样要略.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E4%B8%9C%E6%9B%B2%E9%98%9C%E5%8E%BF%E5%AD%94%E5%BA%99%E5%A5%8E%E6%96%87%E9%98%81-%E6%98%8E%E5%BC%98%E6%B2%BB%E5%8D%81%E4%B8%83%E5%B9%B4%E5%BB%BA.jpg.jpg', 'name': '山东曲阜县孔庙奎文阁-明弘治十七年建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E4%B8%9C%E6%9B%B2%E9%98%9C%E5%8E%BF%E5%AD%94%E5%BA%99%E7%A2%91%E4%BA%AD-%E9%87%91%E6%98%8E%E6%98%8C%E5%85%AD%E5%B9%B4%E5%BB%BA.jpg.jpg', 'name': '山东曲阜县孔庙碑亭-金明昌六年建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E4%B8%9C%E6%9B%B2%E9%98%9C%E5%AD%94%E5%BA%99%E5%A4%A7%E6%88%90%E6%AE%BF-%E6%B8%85%E9%9B%8D%E6%AD%A3%E5%85%AB%E5%B9%B4%E5%BB%BA.jpg.jpg', 'name': '山东曲阜孔庙大成殿-清雍正八年建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E4%B8%9C%E6%9B%B2%E9%98%9C%E8%87%B3%E5%9C%A3%E5%BA%99%E5%B9%B3%E9%9D%A2%E5%9B%BE.jpg.jpg', 'name': '山东曲阜至圣庙平面图.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E4%BA%94%E5%8F%B0%E5%B1%B1-%E4%BD%9B%E5%85%89%E5%AF%BA%E5%A4%A7%E6%AE%BF.jpg.jpg', 'name': '山西五台山-佛光寺大殿.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E4%BA%94%E5%8F%B0%E5%B1%B1-%E4%BD%9B%E5%85%89%E5%AF%BA%E5%A4%A7%E9%9B%84%E5%AE%9D%E6%AE%BF-%E5%94%90%E5%A4%A7%E4%B8%AD%E5%8D%81%E4%B8%80%E5%B9%B4%E5%BB%BA%E4%B8%BA%E7%8E%B0%E5%AD%98%E6%9C%80%E5%8F%A4%E6%9C%A8%E6%9E%84.jpg.jpg', 'name': '山西五台山-佛光寺大雄宝殿-唐大中十一年建为现存最古木构.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E4%BA%94%E5%8F%B0%E5%B1%B1%E4%BD%9B%E5%85%89%E5%AF%BA%E6%96%87%E6%AE%8A%E6%AE%BF.jpg.jpg', 'name': '山西五台山佛光寺文殊殿.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E4%BA%94%E5%8F%B0%E5%B1%B1%E4%BD%9B%E5%85%89%E5%AF%BA%E6%99%9A%E5%94%90%E4%B8%A4%E7%BB%8F%E5%B9%A2.jpg.jpg', 'name': '山西五台山佛光寺晚唐两经幢.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E4%BA%94%E5%8F%B0%E5%B1%B1%E4%BD%9B%E5%85%89%E5%AF%BA%E7%A5%96%E5%B8%88%E5%A1%94-%E5%8C%97%E9%BD%90%E6%88%96%E9%9A%8B%E5%BB%BA.jpg.jpg', 'name': '山西五台山佛光寺祖师塔-北齐或隋建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E5%A4%A7%E5%90%8C%E5%8E%BF%E5%96%84%E5%8C%96%E5%AF%BA%E5%A4%A7%E9%9B%84%E5%AE%9D%E6%AE%BF-%E8%BE%BD%E4%B8%AD%E5%8F%B6%E5%BB%BA.jpg.jpg', 'name': '山西大同县善化寺大雄宝殿-辽中叶建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E5%A4%A7%E5%90%8C%E5%8E%BF%E5%96%84%E5%8C%96%E5%AF%BA%E5%B1%B1%E9%97%A8-%E9%87%91%E5%A4%A9%E4%BC%9A%E5%85%AB%E5%B9%B4%E8%87%B3%E7%9A%87%E7%BB%9F%E4%B8%89%E5%B9%B4%E9%97%B4%E5%BB%BA.jpg.jpg', 'name': '山西大同县善化寺山门-金天会八年至皇统三年间建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E5%A4%A7%E5%90%8C%E5%8E%BF%E5%96%84%E5%8C%96%E5%AF%BA%E6%80%BB%E5%B9%B3%E9%9D%A2%E5%9B%BE.jpg.jpg', 'name': '山西大同县善化寺总平面图.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E5%A4%AA%E5%8E%9F%E6%B0%B8%E7%A5%9A%E5%AF%BA%E7%A0%96%E6%AE%BF%E5%B9%B3%E9%9D%A2%E5%9B%BE.jpg.jpg', 'name': '山西太原永祚寺砖殿平面图.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E6%A6%86%E6%AC%A1%E5%8E%BF%E6%B0%B8%E5%AF%BF%E5%AF%BA%E9%9B%A8%E8%8A%B1%E5%AE%AB-%E5%AE%8B%E5%A4%A7%E4%B8%AD%E7%A5%A5%E7%AC%A6%E5%85%83%E5%B9%B4%E5%BB%BA.jpg.jpg', 'name': '山西榆次县永寿寺雨花宫-宋大中祥符元年建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E5%B1%B1%E8%A5%BF%E6%A6%86%E6%AC%A1%E6%B0%B8%E5%AF%BF%E5%AF%BA%E9%9B%A8%E5%8D%8E%E5%AE%AB-%E5%AE%8B%E5%A4%A7%E4%B8%AD%E7%A5%A5%E7%AC%A6%E5%85%83%E5%B9%B4%E5%BB%BA.jpg.jpg', 'name': '山西榆次永寿寺雨华宫-宋大中祥符元年建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%95%A6%E7%85%8C%E7%9F%B3%E5%AE%A4%E7%94%BB%E5%8D%B7%E4%B8%AD%E5%94%90%E4%BB%A3%E5%BB%BA%E7%AD%91%E9%83%A8%E5%88%86%E8%AF%A6%E5%9B%BE.jpg.jpg', 'name': '敦煌石室画卷中唐代建筑部分详图.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%9B%B2%E9%98%B3%E5%8C%97%E5%B2%B3%E5%BA%99%E5%BE%B7%E5%AE%81%E4%B9%8B%E6%AE%BF%E5%B9%B3%E9%9D%A2%E5%9B%BE-%E5%85%83%E8%87%B3%E5%85%83%E4%B8%83%E5%B9%B4%E5%BB%BA.jpg.jpg', 'name': '曲阳北岳庙德宁之殿平面图-元至元七年建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B1%89%E5%A2%93%E7%9F%B3%E5%AE%A4.jpg.jpg', 'name': '汉墓石室.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B1%89%E6%98%8E%E5%99%A8%E5%BB%BA%E7%AD%91%E7%89%A9%E6%95%B0%E7%A7%8D.jpg.jpg', 'name': '汉明器建筑物数种.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B1%89%E7%94%BB%E5%83%8F%E7%9F%B3%E4%B8%AD%E5%BB%BA%E7%AD%91%E6%95%B0%E7%A7%8D.jpg.jpg', 'name': '汉画像石中建筑数种.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B1%89%E7%9F%B3%E9%98%99%E6%95%B0%E7%A7%8D.jpg.jpg', 'name': '汉石阙数种.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B1%9F%E8%8B%8F%E5%90%B4%E5%8E%BF%E7%BD%97%E6%B1%89%E9%99%A2%E5%8F%8C%E5%A1%94.jpg.jpg', 'name': '江苏吴县罗汉院双塔.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E5%AE%9D%E5%9D%BB%E5%8E%BF%E5%B9%BF%E6%B5%8E%E5%AF%BA%E4%B8%89%E5%A4%A7%E5%A3%AB%E6%AE%BF.jpg', 'name': '河北宝坻县广济寺三大士殿'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E6%98%8C%E5%B9%B3%E5%8E%BF%E6%98%8E%E9%95%BF%E9%99%B5%E6%80%BB%E5%B9%B3%E9%9D%A2%E5%9B%BE-%E6%98%8E%E6%B0%B8%E4%B9%90%E4%B8%83%E5%B9%B4%E8%87%B3%E4%BA%8C%E5%8D%81%E4%BA%8C%E5%B9%B4%E9%97%B4%E5%BB%BA.jpg.jpg', 'name': '河北昌平县明长陵总平面图-明永乐七年至二十二年间建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E6%98%8C%E5%B9%B3%E5%8E%BF%E6%98%8E%E9%95%BF%E9%99%B5%E7%A8%B7%E6%81%A9%E6%AE%BF-%E6%98%8E%E6%B0%B8%E4%B9%90%E9%97%B4%E5%BB%BA.jpg', 'name': '河北昌平县明长陵稷恩殿-明永乐间建'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E6%AD%A3%E5%AE%9A%E5%8E%BF%E9%98%B3%E5%92%8C%E6%A5%BC-%E5%85%83%E5%BB%BA%E6%88%96%E8%80%85%E9%87%91%E6%9C%AB.jpg.jpg', 'name': '河北正定县阳和楼-元建或者金末.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E6%AD%A3%E5%AE%9A%E5%8E%BF%E9%BE%99%E5%85%B4%E5%AF%BA%E8%BD%AC%E8%BD%AE%E8%97%8F%E6%AE%BF-%E5%AE%8B%E5%BB%BA.jpg', 'name': '河北正定县龙兴寺转轮藏殿-宋建'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E8%93%9F%E5%8E%BF%E7%8B%AC%E4%B9%90%E5%AF%BA%E5%B1%B1%E9%97%A8-%E8%BE%BD%E7%BB%9F%E5%92%8C%E4%BA%8C%E5%B9%B4%E5%BB%BA.jpg.jpg', 'name': '河北蓟县独乐寺山门-辽统和二年建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E8%93%9F%E5%8E%BF%E7%8B%AC%E4%B9%90%E5%AF%BA%E8%A7%82%E9%9F%B3%E9%98%81.jpg', 'name': '河北蓟县独乐寺观音阁'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E8%B5%B5%E5%8E%BF%E5%AE%89%E6%B5%8E%E6%A1%A5%28%E5%A4%A7%E7%9F%B3%E6%A1%A5%29%E9%9A%8B%E6%9D%8E%E6%98%A5%E5%BB%BA.jpg', 'name': '河北赵县安济桥(大石桥)隋李春建'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8C%97%E8%B5%B5%E5%8E%BF%E6%B0%B8%E9%80%9A%E6%A1%A5%E9%87%91%E6%98%8E%E6%98%8C%E9%97%B4.jpg.jpg', 'name': '河北赵县永通桥金明昌间.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8D%97%E5%AE%89%E9%98%B3%E6%AE%B7%E5%A2%9F%E5%AE%AB%E6%AE%BF%E9%81%97%E5%9D%80%E5%B9%B3%E9%9D%A2%E5%9B%BE-1.jpg.jpg', 'name': '河南安阳殷墟宫殿遗址平面图-1.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8D%97%E5%AE%89%E9%98%B3%E6%AE%B7%E5%A2%9F%E5%AE%AB%E6%AE%BF%E9%81%97%E5%9D%80%E5%B9%B3%E9%9D%A2%E5%9B%BE.jpg.jpg', 'name': '河南安阳殷墟宫殿遗址平面图.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8D%97%E5%B5%A9%E5%B1%B1%E5%B5%A9%E5%B2%B3%E5%AF%BA%E5%A1%94%E5%B9%B3%E9%9D%A2%E5%9B%BE.jpg.jpg', 'name': '河南嵩山嵩岳寺塔平面图.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8D%97%E7%99%BB%E5%B0%81%E5%8E%BF%E5%91%8A%E6%88%90%E9%95%87%E6%B5%8B%E6%99%AF%E5%8F%B0-%E5%85%83%E9%83%AD%E5%AE%88%E6%95%AC%E5%BB%BA.jpg.jpg', 'name': '河南登封县告成镇测景台-元郭守敬建.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B2%B3%E5%8D%97%E7%99%BB%E5%B0%81%E5%8E%BF%E5%B0%91%E6%9E%97%E5%AF%BA%E5%88%9D%E7%A5%96%E5%BA%B5.jpg.jpg', 'name': '河南登封县少林寺初祖庵.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B8%85%E5%AE%98%E5%BC%8F%E6%A0%B7%E4%B8%89%E5%AD%94%E7%9F%B3%E6%A1%A5%E5%81%9A%E6%B3%95%E8%A6%81%E7%95%A5.jpg.jpg', 'name': '清官式样三孔石桥做法要略.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E6%B8%85%E6%98%8C%E9%99%B5%E5%9C%B0%E5%AE%AB%E6%96%AD%E9%9D%A2%E5%8F%8A%E5%B9%B3%E9%9D%A2%E5%9B%BE%28%E9%99%B5%E5%9C%A8%E6%B2%B3%E5%8C%97%E7%9C%81%E6%98%93%E5%8E%BF%29.jpg.jpg', 'name': '清昌陵地宫断面及平面图(陵在河北省易县).jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E9%87%87%E6%A1%91%E7%8C%8E%E5%9D%8A%E6%8B%93%E6%9C%AC%E5%AE%AB%E5%AE%A4%E5%9B%BE-%E6%88%98%E5%9B%BD%E6%97%B6%E4%BB%A3.jpg.jpg', 'name': '采桑猎坊拓本宫室图-战国时代.jpg'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E6%89%8B%E7%A8%BF53%E5%BC%A0/%E9%BD%90%E9%9A%8B%E5%BB%BA%E7%AD%91%E9%81%97%E4%BE%8B.jpg.jpg', 'name': '齐隋建筑遗例.jpg'}]},
+{id: "sketches", title: "梁思成速写", images: [{'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%281%29.jpg', 'name': '1 (1)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2810%29.jpg', 'name': '1 (10)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28100%29.jpg', 'name': '1 (100)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28101%29.jpg', 'name': '1 (101)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28102%29.jpg', 'name': '1 (102)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28103%29.jpg', 'name': '1 (103)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28104%29.jpg', 'name': '1 (104)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28105%29.jpg', 'name': '1 (105)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28106%29.jpg', 'name': '1 (106)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28107%29.jpg', 'name': '1 (107)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28108%29.jpg', 'name': '1 (108)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28109%29.jpg', 'name': '1 (109)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2811%29.jpg', 'name': '1 (11)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28110%29.jpg', 'name': '1 (110)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28111%29.jpg', 'name': '1 (111)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28112%29.jpg', 'name': '1 (112)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28113%29.jpg', 'name': '1 (113)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28114%29.jpg', 'name': '1 (114)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28115%29.jpg', 'name': '1 (115)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28116%29.jpg', 'name': '1 (116)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28117%29.jpg', 'name': '1 (117)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28118%29.jpg', 'name': '1 (118)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28119%29.jpg', 'name': '1 (119)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2812%29.jpg', 'name': '1 (12)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%28120%29.jpg', 'name': '1 (120)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2813%29.jpg', 'name': '1 (13)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2814%29.jpg', 'name': '1 (14)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2815%29.jpg', 'name': '1 (15)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2816%29.jpg', 'name': '1 (16)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2817%29.jpg', 'name': '1 (17)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2818%29.jpg', 'name': '1 (18)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2819%29.jpg', 'name': '1 (19)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%282%29.jpg', 'name': '1 (2)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2820%29.jpg', 'name': '1 (20)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2821%29.jpg', 'name': '1 (21)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2822%29.jpg', 'name': '1 (22)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2823%29.jpg', 'name': '1 (23)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2824%29.jpg', 'name': '1 (24)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2825%29.jpg', 'name': '1 (25)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2826%29.jpg', 'name': '1 (26)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2827%29.jpg', 'name': '1 (27)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2828%29.jpg', 'name': '1 (28)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2829%29.jpg', 'name': '1 (29)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%283%29.jpg', 'name': '1 (3)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2830%29.jpg', 'name': '1 (30)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2831%29.jpg', 'name': '1 (31)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2832%29.jpg', 'name': '1 (32)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2833%29.jpg', 'name': '1 (33)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2834%29.jpg', 'name': '1 (34)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2835%29.jpg', 'name': '1 (35)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2836%29.jpg', 'name': '1 (36)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2837%29.jpg', 'name': '1 (37)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2838%29.jpg', 'name': '1 (38)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2839%29.jpg', 'name': '1 (39)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%284%29.jpg', 'name': '1 (4)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2840%29.jpg', 'name': '1 (40)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2841%29.jpg', 'name': '1 (41)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2842%29.jpg', 'name': '1 (42)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2843%29.jpg', 'name': '1 (43)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2844%29.jpg', 'name': '1 (44)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2845%29.jpg', 'name': '1 (45)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2846%29.jpg', 'name': '1 (46)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2847%29.jpg', 'name': '1 (47)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2848%29.jpg', 'name': '1 (48)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2849%29.jpg', 'name': '1 (49)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%285%29.jpg', 'name': '1 (5)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2850%29.jpg', 'name': '1 (50)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2851%29.jpg', 'name': '1 (51)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2852%29.jpg', 'name': '1 (52)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2853%29.jpg', 'name': '1 (53)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2854%29.jpg', 'name': '1 (54)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2855%29.jpg', 'name': '1 (55)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2856%29.jpg', 'name': '1 (56)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2857%29.jpg', 'name': '1 (57)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2858%29.jpg', 'name': '1 (58)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2859%29.jpg', 'name': '1 (59)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%286%29.jpg', 'name': '1 (6)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2860%29.jpg', 'name': '1 (60)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2861%29.jpg', 'name': '1 (61)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2862%29.jpg', 'name': '1 (62)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2863%29.jpg', 'name': '1 (63)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2864%29.jpg', 'name': '1 (64)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2865%29.jpg', 'name': '1 (65)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2866%29.jpg', 'name': '1 (66)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2867%29.jpg', 'name': '1 (67)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2868%29.jpg', 'name': '1 (68)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2869%29.jpg', 'name': '1 (69)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%287%29.jpg', 'name': '1 (7)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2870%29.jpg', 'name': '1 (70)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2871%29.jpg', 'name': '1 (71)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2872%29.jpg', 'name': '1 (72)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2873%29.jpg', 'name': '1 (73)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2874%29.jpg', 'name': '1 (74)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2875%29.jpg', 'name': '1 (75)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2876%29.jpg', 'name': '1 (76)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2877%29.jpg', 'name': '1 (77)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2878%29.jpg', 'name': '1 (78)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2879%29.jpg', 'name': '1 (79)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%288%29.jpg', 'name': '1 (8)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2880%29.jpg', 'name': '1 (80)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2881%29.jpg', 'name': '1 (81)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2882%29.jpg', 'name': '1 (82)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2883%29.jpg', 'name': '1 (83)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2884%29.jpg', 'name': '1 (84)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2885%29.jpg', 'name': '1 (85)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2886%29.jpg', 'name': '1 (86)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2887%29.jpg', 'name': '1 (87)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2888%29.jpg', 'name': '1 (88)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2889%29.jpg', 'name': '1 (89)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%289%29.jpg', 'name': '1 (9)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2890%29.jpg', 'name': '1 (90)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2891%29.jpg', 'name': '1 (91)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2892%29.jpg', 'name': '1 (92)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2893%29.jpg', 'name': '1 (93)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2894%29.jpg', 'name': '1 (94)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2895%29.jpg', 'name': '1 (95)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2896%29.jpg', 'name': '1 (96)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2897%29.jpg', 'name': '1 (97)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2898%29.jpg', 'name': '1 (98)'}, {'src': '%E6%A2%81%E6%80%9D%E6%88%90%E9%80%9F%E5%86%99120%E5%BC%A0/1%20%2899%29.jpg', 'name': '1 (99)'}]}
+];
+        const allItems = Array.from(document.querySelectorAll('.item'));
+        const gallery = document.getElementById('gallery');
+        const empty = document.getElementById('empty');
+        const channels = document.querySelectorAll('.channel');
+        const detail = document.getElementById('detail');
+        const detailImg = document.getElementById('detailImg');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailChannel = document.getElementById('detailChannel');
+        const filmstrip = document.getElementById('filmstrip');
+        const closeBtn = document.getElementById('closeBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const stagePrev = document.getElementById('stagePrev');
+        const stageNext = document.getElementById('stageNext');
+
+        let currentFilter = 'all';
+        let currentItem = null;
+        let visibleItems = [...allItems];
+
+        function updateFilter(filter) {
+            currentFilter = filter;
+            visibleItems = allItems.filter(item => filter === 'all' || item.dataset.collection === filter);
+
+            allItems.forEach(item => {
+                item.style.display = (filter === 'all' || item.dataset.collection === filter) ? 'block' : 'none';
+            });
+
+            empty.style.display = visibleItems.length ? 'none' : 'block';
+
+            channels.forEach(btn => {
+                const isActive = btn.dataset.filter === filter;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            });
+        }
+
+        channels.forEach(btn => {
+            btn.addEventListener('click', () => updateFilter(btn.dataset.filter));
+        });
+
+        function getItemData(item) {
+            const col = collections.find(c => c.id === item.dataset.collection);
+            const idx = Number(item.dataset.index);
+            return { col, img: col.images[idx], idx };
+        }
+
+        function openDetail(item) {
+            currentItem = item;
+            const { col, img } = getItemData(item);
+            detailImg.src = img.src;
+            detailImg.alt = img.name;
+            detailTitle.textContent = img.name;
+            detailChannel.textContent = col.title;
+            detail.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            buildFilmstrip();
+            scrollActiveThumb();
+        }
+
+        function closeDetail() {
+            detail.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function buildFilmstrip() {
+            if (!currentItem) return;
+            const { col } = getItemData(currentItem);
+            filmstrip.innerHTML = '';
+            col.images.forEach((img, idx) => {
+                const item = allItems.find(el => el.dataset.collection === col.id && Number(el.dataset.index) === idx);
+                const thumb = document.createElement('div');
+                thumb.className = 'thumb';
+                thumb.tabIndex = 0;
+                thumb.setAttribute('role', 'button');
+                thumb.setAttribute('aria-label', img.name);
+                if (item === currentItem) thumb.classList.add('active');
+                thumb.innerHTML = `<img src="${img.src}" alt="" loading="lazy">`;
+                thumb.addEventListener('click', () => {
+                    if (item) openDetail(item);
+                });
+                thumb.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (item) openDetail(item);
+                    }
+                });
+                filmstrip.appendChild(thumb);
+            });
+        }
+
+        function scrollActiveThumb() {
+            const active = filmstrip.querySelector('.thumb.active');
+            if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+
+        function nextImage() {
+            if (!currentItem) return;
+            const currentIdx = visibleItems.indexOf(currentItem);
+            const nextIdx = (currentIdx + 1) % visibleItems.length;
+            openDetail(visibleItems[nextIdx]);
+        }
+
+        function prevImage() {
+            if (!currentItem) return;
+            const currentIdx = visibleItems.indexOf(currentItem);
+            const prevIdx = (currentIdx - 1 + visibleItems.length) % visibleItems.length;
+            openDetail(visibleItems[prevIdx]);
+        }
+
+        allItems.forEach(item => {
+            item.addEventListener('click', () => openDetail(item));
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openDetail(item);
+                }
+            });
+        });
+
+        closeBtn.addEventListener('click', closeDetail);
+        nextBtn.addEventListener('click', (e) => { e.stopPropagation(); nextImage(); });
+        prevBtn.addEventListener('click', (e) => { e.stopPropagation(); prevImage(); });
+        stageNext.addEventListener('click', (e) => { e.stopPropagation(); nextImage(); });
+        stagePrev.addEventListener('click', (e) => { e.stopPropagation(); prevImage(); });
+
+        detail.addEventListener('click', (e) => {
+            if (e.target === detail || e.target.classList.contains('detail-stage')) closeDetail();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!detail.classList.contains('active')) return;
+            if (e.key === 'Escape') closeDetail();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'ArrowLeft') prevImage();
+        });
+
+        // Keyboard navigation for channels
+        channels.forEach((btn, i) => {
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    channels[(i + 1) % channels.length].focus();
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    channels[(i - 1 + channels.length) % channels.length].focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
